@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solana Faucet Platinum V11</title>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* التنسيقات الأصلية بالكامل */
+        :root { --bg: #050505; --card: #111; --primary: #9945FF; --gray: #a0a0a0; --line: #222; --success: #14F195; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 110px; user-select: none; overflow-x: hidden; text-align: left; transition: 0.3s; }
+        .rtl body { text-align: right; direction: rtl; }
+        .container { padding: 15px; max-width: 450px; margin: auto; }
+        #p-home { padding-top: 15vh; padding-bottom: 5vh; }
+        .swal2-popup-custom { background: #111 !important; color: #fff !important; border: 1px solid var(--line) !important; border-radius: 25px !important; box-shadow: 0 0 20px rgba(153,69,255,0.2) !important; }
+        .swal2-styled.swal2-confirm { background-color: var(--primary) !important; color: #fff !important; border-radius: 15px !important; font-weight: bold !important; }
+        .lang-pnl { padding: 10px 15px; display: flex; justify-content: flex-end; }
+        .btn-lang { background: #1a1a1a; color: var(--primary); border: 1px solid var(--line); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+        .card { background: var(--card); border-radius: 25px; padding: 20px; border: 1px solid var(--line); text-align: center; margin-bottom: 15px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .ad-slot { width: 100%; min-height: 60px; background: rgba(255,255,255,0.02); border-radius: 12px; margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; display: none; }
+        .fp-box { margin-top: 15px; padding: 15px; background: rgba(153, 69, 255, 0.05); border: 1px dashed var(--primary); border-radius: 18px; font-size: 0.85rem; color: var(--gray); }
+        .fp-link { color: var(--primary); text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
+        .bal-val { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(153,69,255,0.3); }
+        .btn-main { width: 100%; padding: 18px; border-radius: 18px; border: none; background: var(--primary); color: #fff; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        /* جعل الزر غير نشط حتى حل الكابتشا */
+        .btn-main:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
+        .v-input { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; margin-bottom: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; outline: none; }
+        .nav-bot { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; padding: 12px 0 35px; border-top: 1px solid var(--line); direction: ltr; z-index: 1000; }
+        .nav-item { flex: 1; text-align: center; color: var(--gray); cursor: pointer; font-size: 0.8rem; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+        .smc-panel { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; padding: 25px; direction: ltr; overflow-y: auto; text-align: left; }
+        .hidden { display: none; }
+        .progress-bar { height: 8px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        #p-bar { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
+        /* ستايل حاوية الكابتشا */
+        .cap-cont { display: flex; justify-content: center; margin-bottom: 15px; transform: scale(0.9); }
+    </style>
+</head>
+<body class="ltr">
+    <div class="lang-pnl"><button class="btn-lang" onclick="toggleLang()" id="lang-btn">العربية</button></div>
+    <div id="ad-top-slot" class="ad-slot"></div>
+    <div class="container">
+        <div id="p-home" class="page-view animate__animated animate__fadeIn">
+            <div class="card">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" style="width:80px;" id="smc-trigger">
+                <div style="color:var(--gray); font-size: 0.9rem; margin-top:10px;" id="txt-total-bal">TOTAL BALANCE (SOL)</div>
+                <div id="bal-display" class="bal-val">0.000000</div>
+                
+                <div class="cap-cont">
+                    <div class="h-captcha" data-sitekey="YOUR_SITE_KEY" data-callback="onCapSolved" data-theme="dark"></div>
+                </div>
+
+                <div id="claim-area"><button id="btn-claim" class="btn-main" disabled>CLAIM SOLANA ⚡</button></div>
+                <div id="wait-area" class="hidden">
+                    <div id="timer-text" style="font-weight:bold; font-size:1.4rem; color:#fff;">00:00</div>
+                    <div class="progress-bar"><div id="p-bar"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="p-wallet" class="page-view hidden animate__animated animate__fadeIn">
+            <div class="card">
+                <h3 style="color:var(--primary)" id="txt-withdraw-title">INSTANT WITHDRAW</h3>
+                <input type="text" id="w-email" placeholder="FaucetPay Email Address" class="v-input">
+                <input type="number" id="w-amt" placeholder="Amount" class="v-input" step="0.0001">
+                <button class="btn-main" id="btn-withdraw">WITHDRAW TO FAUCETPAY</button>
+                <div style="margin-top:10px; font-size:0.8rem; color:var(--gray);">
+                    <span id="txt-min">Min:</span> <span id="min-text">0.0005</span> SOL
+                </div>
+                <div class="fp-box">
+                    <span id="txt-no-wallet">Don't have a FaucetPay account?</span>
+                    <a href="https://faucetpay.io/?r=362774" target="_blank" class="fp-link" id="txt-reg-now">Register here!</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="p-refs" class="page-view hidden animate__animated animate__fadeIn">
+            <div class="card">
+                <h3 style="color:var(--primary)" id="txt-ref-title">REFERRAL PROGRAM</h3>
+                <p style="font-size:0.9rem; color:var(--gray)">
+                    <span id="txt-earn">Earn</span> <span id="ref-bonus-text">0.00001</span> <span id="txt-earn-suffix">SOL for every friend!</span>
+                </p>
+                <input type="text" id="ref-link" readonly class="v-input" style="background:#000; color:var(--primary); border-style:dashed;">
+                <button class="btn-main" onclick="copyRef()" id="btn-copy">COPY LINK</button>
+            </div>
+            <div class="card">
+                <div style="color:var(--gray)" id="txt-total-refs">TOTAL REFERRALS</div>
+                <div id="ref-count-display" style="font-size:2rem; font-weight:bold; color:#fff;">0</div>
+            </div>
+        </div>
+    </div>
+    <div id="ad-bottom-slot" class="ad-slot"></div>
+
+    <div id="smc-ui" class="smc-panel">
+        <h2 style="color:var(--primary)">SOL SMC PANEL V11 <span id="user-count-badge">Users: 0</span></h2>
+        <label>API Key:</label><input type="text" id="cfg-api" class="v-input">
+        <label>Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.000001">
+        <label>Ref Bonus:</label><input type="number" id="cfg-ref-bonus" class="v-input" step="0.000001">
+        <label>Wait (Min):</label><input type="number" id="cfg-wait" class="v-input">
+        <label>Min Withdraw:</label><input type="number" id="cfg-min" class="v-input">
+        <label>Ads Top (HTML):</label><textarea id="cfg-ad-top" class="v-input"></textarea>
+        <label>Ads Bottom (HTML):</label><textarea id="cfg-ad-bottom" class="v-input"></textarea>
+        <button class="btn-main" id="btn-save-smc">SAVE SOL CONFIG</button>
+        <button onclick="document.getElementById('smc-ui').style.display='none'" style="background:red; margin-top:10px;" class="btn-main">CLOSE</button>
+    </div>
+
+    <nav class="nav-bot">
+        <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-bolt"></i><span id="nav-faucet">Faucet</span></div>
+        <div class="nav-item" onclick="nav('wallet', this)"><i class="fas fa-wallet"></i><span id="nav-wallet">Wallet</span></div>
+        <div class="nav-item" onclick="nav('refs', this)"><i class="fas fa-users"></i><span id="nav-friends">Friends</span></div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const fbCfg = { apiKey: "AIzaSyD74FRYsTCNx8RjMYBdlUKdIs46CgY5154", databaseURL: "https://pinixmining-default-rtdb.firebaseio.com", projectId: "pinixmining", appId: "1:788763639624:web:0b6ba54f46f76ce1e93d7d" };
+        const app = initializeApp(fbCfg); const db = getDatabase(app);
+        const tg = window.Telegram?.WebApp; tg?.expand();
+        const tgId = tg?.initDataUnsafe?.user?.id || "user_test";
+        const uid = "u_" + tgId;
+        const urlParams = new URLSearchParams(window.location.search);
+        const refBy = urlParams.get('start');
+
+        let sets = { reward: 0.00001, wait: 5, min: 0.0005, api: "", adTop: "", adBottom: "", refBonus: 0.00001 };
+        let uBal = 0; let tTick; let currentLang = 'en';
+        
+        const userRef = ref(db, 'sol_users/' + uid);
+        const configRef = ref(db, 'sol_config');
+
+        // نظام اللغة الأصلي
+        const langData = {
+            en: { totalBal: "TOTAL BALANCE (SOL)", claimBtn: "CLAIM SOLANA ⚡", withdrawTitle: "INSTANT WITHDRAW", emailPh: "FaucetPay Email Address", amtPh: "Amount", withdrawBtn: "WITHDRAW", minTxt: "Min:", refTitle: "REFERRAL PROGRAM", earnTxt: "Earn", earnSuffix: "SOL/Friend", copyBtn: "COPY LINK", totalRefs: "TOTAL REFERRALS", navFaucet: "Faucet", navWallet: "Wallet", navFriends: "Friends", langBtn: "العربية", swalClaim: "Claimed!", swalSuccess: "Success", swalError: "Error", txtNoWallet: "No account?", txtRegNow: "Register here!" },
+            ar: { totalBal: "إجمالي الرصيد (SOL)", claimBtn: "طالب بـ SOLANA ⚡", withdrawTitle: "سحب فوري", emailPh: "بريد فوست باي", amtPh: "الكمية", withdrawBtn: "سحب", minTxt: "الحد الأدنى:", refTitle: "برنامج الإحالة", earnTxt: "اربح", earnSuffix: "SOL/صديق", copyBtn: "نسخ الرابط", totalRefs: "إجمالي الإحالات", navFaucet: "الصنبور", navWallet: "المحفظة", navFriends: "الأصدقاء", langBtn: "English", swalClaim: "تمت المطالبة!", swalSuccess: "نجاح", swalError: "خطأ", txtNoWallet: "ليس لديك حساب؟", txtRegNow: "سجل من هنا!" }
+        };
+
+        window.toggleLang = () => { currentLang = currentLang === 'en' ? 'ar' : 'en'; applyLang(); };
+        function applyLang() {
+            const d = langData[currentLang];
+            document.getElementById('main-html').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-btn').innerText = d.langBtn;
+            document.getElementById('txt-total-bal').innerText = d.totalBal;
+            document.getElementById('btn-claim').innerText = d.claimBtn;
+            document.getElementById('txt-withdraw-title').innerText = d.withdrawTitle;
+            document.getElementById('w-email').placeholder = d.emailPh;
+            document.getElementById('w-amt').placeholder = d.amtPh;
+            document.getElementById('btn-withdraw').innerText = d.withdrawBtn;
+            document.getElementById('txt-min').innerText = d.minTxt;
+            document.getElementById('txt-ref-title').innerText = d.refTitle;
+            document.getElementById('txt-earn').innerText = d.earnTxt;
+            document.getElementById('txt-earn-suffix').innerText = d.earnSuffix;
+            document.getElementById('btn-copy').innerText = d.copyBtn;
+            document.getElementById('txt-total-refs').innerText = d.totalRefs;
+            document.getElementById('nav-faucet').innerText = d.navFaucet;
+            document.getElementById('nav-wallet').innerText = d.navWallet;
+            document.getElementById('nav-friends').innerText = d.navFriends;
+            document.getElementById('txt-no-wallet').innerText = d.txtNoWallet;
+            document.getElementById('txt-reg-now').innerText = d.txtRegNow;
+        }
+
+        // تفعيل الزر عند حل الكابتشا [جديد]
+        window.onCapSolved = () => { document.getElementById('btn-claim').disabled = false; };
+
+        onValue(configRef, (s) => {
+            if(s.exists()) {
+                sets = s.val();
+                document.getElementById('min-text').innerText = sets.min;
+                document.getElementById('ref-bonus-text').innerText = sets.refBonus;
+                const top = document.getElementById('ad-top-slot');
+                if(sets.adTop) { top.innerHTML = sets.adTop; top.style.display = 'flex'; }
+                const bot = document.getElementById('ad-bottom-slot');
+                if(sets.adBottom) { bot.innerHTML = sets.adBottom; bot.style.display = 'flex'; }
+            }
+        });
+
+        onValue(userRef, (s) => {
+            const d = s.val() || { balance: 0, last: 0, refCount: 0 };
+            uBal = d.balance || 0;
+            document.getElementById('bal-display').innerText = uBal.toFixed(6);
+            document.getElementById('ref-link').value = "https://t.me/BeeFaucetBot?start=" + tgId;
+            document.getElementById('ref-count-display').innerText = d.refCount || 0;
+            runTimer(d.last);
+        });
+
+        function runTimer(last) {
+            clearInterval(tTick);
+            tTick = setInterval(() => {
+                const diff = (sets.wait * 60000) - (Date.now() - last);
+                if(diff > 0) {
+                    document.getElementById('claim-area').classList.add('hidden');
+                    document.getElementById('wait-area').classList.remove('hidden');
+                    const m = Math.floor(diff/60000), s = Math.floor((diff%60000)/1000);
+                    document.getElementById('timer-text').innerText = `${m}:${s<10?'0'+s:s}`;
+                    document.getElementById('p-bar').style.width = (((sets.wait*60000)-diff)/(sets.wait*60000)*100) + "%";
+                } else { document.getElementById('claim-area').classList.remove('hidden'); document.getElementById('wait-area').classList.add('hidden'); }
+            }, 1000);
+        }
+
+        document.getElementById('btn-claim').onclick = async () => {
+            if(hcaptcha.getResponse() === "") return;
+            await update(userRef, { balance: uBal + parseFloat(sets.reward), last: Date.now() });
+            hcaptcha.reset(); document.getElementById('btn-claim').disabled = true;
+            Swal.fire({ title: 'Success', icon: 'success', timer: 2000, customClass: { popup: 'swal2-popup-custom' } });
+        };
+
+        window.nav = (p, el) => {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById('p-'+p).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+        };
+
+        let gate = 0; document.getElementById('smc-trigger').onclick = () => {
+            gate++; if(gate >= 5) {
+                Swal.fire({ title: 'Admin', input: 'password', customClass: { popup: 'swal2-popup-custom' } }).then(res => {
+                    if(res.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block';
+                }); gate=0;
+            }
+        };
+
+        applyLang();
+    </script>
+</body>
+  </html>
+                           
