@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Super Profit Hub - Main V11</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&display=swap');
+        :root { --bg: #010101; --card: rgba(15, 15, 15, 0.98); --primary: #0088cc; --gold: #ffd700; --line: rgba(255,255,255,0.06); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body, html { height: 100dvh; width: 100%; overflow: hidden; background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; }
+        #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .page-wrapper { height: 100dvh; display: flex; flex-direction: column; padding: 12px; position: relative; z-index: 2; justify-content: space-between; }
+        header { text-align: center; padding-top: 5px; flex-shrink: 0; }
+        .main-logo { font-size: 2.2rem; color: var(--gold); filter: drop-shadow(0 0 12px rgba(255,215,0,0.3)); }
+        h1 { font-size: 2rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
+        .subtitle { color: #444; font-size: 0.65rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; flex: 1; margin: 10px 0; min-height: 0; }
+        .coin-card { background: var(--card); border: 1px solid var(--line); border-radius: 28px; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .coin-card img { width: 52px; height: 52px; margin-bottom: 8px; }
+        .coin-name { font-size: 0.9rem; font-weight: 900; }
+        .coin-status { font-size: 0.6rem; color: #00ff88; font-weight: 900; background: rgba(0,255,136,0.1); padding: 4px 12px; border-radius: 20px; margin-top: 5px; }
+        .tg-section { background: rgba(18,18,18,0.95); border: 1px solid var(--line); border-radius: 22px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; flex-shrink: 0; }
+        .tg-content { display: flex; align-items: center; gap: 10px; }
+        .tg-icon-box i { font-size: 1.8rem; color: var(--primary); filter: drop-shadow(0 0 8px var(--primary)); }
+        .tg-text h3 { margin: 0; font-size: 0.95rem; font-weight: 900; }
+        .tg-text p { margin: 0; color: #555; font-size: 0.65rem; font-weight: bold; }
+        .btn-tg { background: var(--primary); color: white; text-decoration: none; padding: 10px 18px; border-radius: 12px; font-weight: 900; font-size: 0.75rem; }
+        .btn-lang { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.05); color: var(--primary); border: 1px solid var(--line); padding: 6px 12px; border-radius: 10px; font-weight: bold; font-size: 0.7rem; cursor: pointer; z-index: 100; }
+        footer { text-align: center; color: #1a1a1a; font-size: 0.55rem; flex-shrink: 0; padding-bottom: 2px; }
+    </style>
+</head>
+<body>
+    <canvas id="particles-js"></canvas>
+    <button class="btn-lang" onclick="toggleLang()" id="lang-btn">العربية</button>
+    <div class="page-wrapper">
+        <header class="animate__animated animate__fadeInDown">
+            <i class="fas fa-crown main-logo"></i>
+            <h1 id="txt-title">SUPER PROFIT</h1>
+            <p class="subtitle" id="txt-subtitle">ELITE CRYPTO REWARDS V11</p>
+        </header>
+
+        <div class="grid-container">
+            <a href="https://ton-rewards.web.app" class="coin-card animate__animated animate__zoomIn"><img src="https://cryptologos.cc/logos/toncoin-ton-logo.png"><div class="coin-name">TONCOIN</div><div class="coin-status status-text">ACTIVE</div></a>
+            <a href="https://bnb-rewards.web.app" class="coin-card animate__animated animate__zoomIn" style="animation-delay:0.1s"><img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png"><div class="coin-name">BNB SMART</div><div class="coin-status status-text">ACTIVE</div></a>
+            <a href="https://sol-rewards.web.app" class="coin-card animate__animated animate__zoomIn" style="animation-delay:0.2s"><img src="https://cryptologos.cc/logos/solana-sol-logo.png"><div class="coin-name">SOLANA</div><div class="coin-status status-text">ACTIVE</div></a>
+            <a href="https://doge-rewards.web.app" class="coin-card animate__animated animate__zoomIn" style="animation-delay:0.3s"><img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png"><div class="coin-name">DOGECOIN</div><div class="coin-status status-text">ACTIVE</div></a>
+        </div>
+
+        <div class="tg-section animate__animated animate__fadeInUp">
+            <div class="tg-content">
+                <div class="tg-icon-box"><i class="fab fa-telegram-plane"></i></div>
+                <div class="tg-text">
+                    <h3 id="txt-tg-title">OFFICIAL HUB</h3>
+                    <p id="txt-tg-desc">Updates & Payments</p>
+                </div>
+            </div>
+            <a href="https://t.me/SuperProfitfaucet" class="btn-tg" id="txt-tg-btn">JOIN</a>
+        </div>
+        <footer>SUPER PROFIT HUB &copy; 2026</footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('particles-js'); const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particles = [];
+        class Particle {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 1.8 + 0.2; this.speedY = -(Math.random() * 0.3 + 0.1); this.opacity = Math.random() * 0.5 + 0.1; this.glow = Math.random() > 0.8; }
+            update() { this.y += this.speedY; if (this.y < -10) this.reset(); }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); if (this.glow) { ctx.shadowBlur = 10; ctx.shadowColor = "#0088cc"; ctx.fillStyle = `rgba(0, 136, 204, ${this.opacity})`; } else { ctx.shadowBlur = 0; ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity * 0.4})`; } ctx.fill(); }
+        }
+        function init() { particles = []; for (let i = 0; i < 45; i++) particles.push(new Particle()); }
+        function anim() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
+        init(); anim();
+        let currentLang = 'en';
+        const langData = {
+            en: { title: "SUPER PROFIT", subtitle: "ELITE CRYPTO REWARDS V11", active: "ACTIVE", tgTitle: "OFFICIAL HUB", tgDesc: "Updates & Payments", tgBtn: "JOIN", langBtn: "العربية" },
+            ar: { title: "سوبر الربح", subtitle: "مركز مكافآت النخبة V11", active: "نشط", tgTitle: "قناتنا الرسمية", tgDesc: "تحديثات ودفع فوري", tgBtn: "انضم", langBtn: "English" }
+        };
+        function toggleLang() { currentLang = currentLang === 'en' ? 'ar' : 'en'; applyLang(); }
+        function applyLang() {
+            const d = langData[currentLang]; document.getElementById('main-html').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-btn').innerText = d.langBtn; document.getElementById('txt-title').innerText = d.title;
+            document.getElementById('txt-subtitle').innerText = d.subtitle; document.getElementById('txt-tg-title').innerText = d.tgTitle;
+            document.getElementById('txt-tg-desc').innerText = d.tgDesc; document.getElementById('txt-tg-btn').innerText = d.tgBtn;
+            document.querySelectorAll('.status-text').forEach(el => el.innerText = d.active);
+        }
+    </script>
+</body>
+</html>
