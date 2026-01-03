@@ -3,52 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Profit Hub - المركز الرئيسي</title>
+    <title>Super Profit Hub - مركز التعدين</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; }
-        .header { padding: 30px; background: linear-gradient(45deg, #1a1a1a, #333); border-radius: 20px; margin-bottom: 30px; border: 1px solid #444; }
-        h1 { color: #00ffcc; margin: 0; font-size: 28px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; margin: 0 auto; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 15px; border: 1px solid #333; transition: 0.3s; text-decoration: none; color: white; display: block; }
-        .card:active { transform: scale(0.95); background: #252525; }
-        .ton { border-bottom: 4px solid #0088cc; }
-        .bnb { border-bottom: 4px solid #f3ba2f; }
-        .sol { border-bottom: 4px solid #14F195; }
-        .doge { border-bottom: 4px solid #c2a633; }
-        .symbol { font-size: 30px; margin-bottom: 10px; display: block; }
-        .name { font-weight: bold; font-size: 18px; }
+        body { background: #0b0e11; color: white; font-family: 'Cairo', sans-serif; margin: 0; text-align: center; }
+        .container { padding: 20px; }
+        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .coin-card { background: #1e2329; padding: 20px; border-radius: 12px; border-bottom: 4px solid #444; cursor: pointer; transition: 0.3s; }
+        .coin-card:active { transform: scale(0.95); }
+        .ton { border-color: #0088cc; } .bnb { border-color: #f3ba2f; }
+        .sol { border-color: #14f195; } .doge { border-color: #c2a633; }
+        .mining-section { display: none; padding: 30px; background: #1e2329; border-radius: 20px; margin: 20px; }
+        .active { display: block; }
+        .balance { font-size: 35px; color: #f3ba2f; margin: 20px 0; font-weight: bold; }
+        button { background: #f3ba2f; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Super Profit Hub</h1>
+    <div id="home" class="container active">
+        <h1>Super Profit Hub 🚀</h1>
         <p>اختر العملة لبدء التعدين السحابي</p>
+        <div class="card-grid">
+            <div class="coin-card ton" onclick="startMining('TON', '#0088cc')">💎<br>TON</div>
+            <div class="coin-card bnb" onclick="startMining('BNB', '#f3ba2f')">🟡<br>BNB</div>
+            <div class="coin-card sol" onclick="startMining('SOL', '#14f195')">💜<br>SOL</div>
+            <div class="coin-card doge" onclick="startMining('DOGE', '#c2a633')">🐕<br>DOGE</div>
+        </div>
     </div>
 
-    <div class="grid">
-        <a href="/ton-folder" class="card ton">
-            <span class="symbol">💎</span>
-            <span class="name">تعدين TON</span>
-        </a>
-
-        <a href="/bnb-folder" class="card bnb">
-            <span class="symbol">🟡</span>
-            <span class="name">تعدين BNB</span>
-        </a>
-
-        <a href="/sol-folder" class="card sol">
-            <span class="symbol">💜</span>
-            <span class="name">تعدين SOL</span>
-        </a>
-
-        <a href="/doge-folder" class="card doge">
-            <span class="symbol">🐕</span>
-            <span class="name">تعدين DOGE</span>
-        </a>
+    <div id="mining-room" class="mining-section">
+        <h2 id="coin-name">تعدين</h2>
+        <div class="balance" id="balance">0.00000000</div>
+        <p id="status" style="color: #00ffcc;">جاري التعدين...</p>
+        <button onclick="goBack()">إيقاف والعودة</button>
     </div>
 
-    <p style="margin-top: 40px; color: #666; font-size: 12px;">جميع الحقوق محفوظة © 2026 - Super Profit Hub</p>
+    <script>
+        // إعدادات Firebase من صورتك
+        const firebaseConfig = {
+            apiKey: "AIzaSyBUpV_aenNcQRR1v7LaRzGp7uou6yZy64",
+            authDomain: "superprofithub-web.firebaseapp.com",
+            projectId: "superprofithub-web",
+            appId: "1:1088540739892:web:20a07d4b7cadbac719bd61"
+        };
+        firebase.initializeApp(firebaseConfig);
 
+        let miningInterval;
+        let currentBalance = 0;
+
+        function startMining(name, color) {
+            document.getElementById('home').classList.remove('active');
+            document.getElementById('mining-room').classList.add('active');
+            document.getElementById('coin-name').innerText = "تعدين " + name;
+            document.getElementById('coin-name').style.color = color;
+            
+            miningInterval = setInterval(() => {
+                currentBalance += 0.00000045;
+                document.getElementById('balance').innerText = currentBalance.toFixed(8);
+            }, 1000);
+        }
+
+        function goBack() {
+            clearInterval(miningInterval);
+            document.getElementById('mining-room').classList.remove('active');
+            document.getElementById('home').classList.add('active');
+        }
+    </script>
 </body>
 </html>
