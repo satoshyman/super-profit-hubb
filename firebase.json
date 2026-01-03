@@ -1,0 +1,29 @@
+{
+  "hosting": [
+    {
+      "target": "main-hub",
+      "public": "public",
+      "rewrites": [{ "source": "**", "destination": "/index.html" }]
+    },
+    {
+      "target": "ton-site",
+      "public": "ton-folder",
+      "rewrites": [{ "source": "**", "destination": "/index.html" }]
+    },
+    {
+      "target": "bnb-site",
+      "public": "bnb-folder",
+      "rewrites": [{ "source": "**", "destination": "/index.html" }]
+    },
+    {
+      "target": "sol-site",
+      "public": "sol-folder",
+      "rewrites": [{ "source": "**", "destination": "/index.html" }]
+    },
+    {
+      "target": "doge-site",
+      "public": "doge-folder",
+      "rewrites": [{ "source": "**", "destination": "/index.html" }]
+    }
+  ]
+}
