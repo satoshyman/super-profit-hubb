@@ -1,65 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="main-html">
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dogecoin Faucet Platinum V8.6</title>
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8"><title>DOGE Mining</title>
     <style>
-        /* ستايل Dogecoin باللون البرتقالي المعتمد */
-        :root { --bg: #050505; --card: #111; --primary: #BA9F33; --gray: #a0a0a0; --line: #222; --success: #14F195; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 110px; user-select: none; overflow-x: hidden; text-align: left; transition: 0.3s; }
-        .rtl body { text-align: right; direction: rtl; }
-        .container { padding: 15px; max-width: 450px; margin: auto; }
-        #p-home { padding-top: 15vh; padding-bottom: 5vh; }
-        .swal2-popup-custom { background: #111 !important; color: #fff !important; border: 1px solid var(--line) !important; border-radius: 25px !important; box-shadow: 0 0 20px rgba(186,159,51,0.2) !important; }
-        .swal2-styled.swal2-confirm { background-color: var(--primary) !important; color: #000 !important; border-radius: 15px !important; font-weight: bold !important; }
-        .lang-pnl { padding: 10px 15px; display: flex; justify-content: flex-end; }
-        .btn-lang { background: #1a1a1a; color: var(--primary); border: 1px solid var(--line); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
-        .card { background: var(--card); border-radius: 25px; padding: 20px; border: 1px solid var(--line); text-align: center; margin-bottom: 15px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .ad-slot { width: 100%; min-height: 60px; background: rgba(255,255,255,0.02); border-radius: 12px; margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; display: none; }
-        .fp-box { margin-top: 15px; padding: 15px; background: rgba(186,159,51,0.05); border: 1px dashed var(--primary); border-radius: 18px; font-size: 0.85rem; color: var(--gray); }
-        .fp-link { color: var(--primary); text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
-        .bal-val { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(186,159,51,0.3); }
-        .btn-main { width: 100%; padding: 18px; border-radius: 18px; border: none; background: var(--primary); color: #000; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-main:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
-        .v-input { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; margin-bottom: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; outline: none; }
-        .nav-bot { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; padding: 12px 0 35px; border-top: 1px solid var(--line); direction: ltr; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: var(--gray); cursor: pointer; font-size: 0.8rem; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 1.6rem; display: block; margin-bottom: 4px; }
-        .smc-panel { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; padding: 25px; direction: ltr; overflow-y: auto; text-align: left; }
-        .hidden { display: none; }
-        .progress-bar { height: 8px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; }
-        #p-bar { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
-        .cap-cont { display: flex; justify-content: center; margin-bottom: 15px; transform: scale(0.9); }
+        body { background: #000; color: #c2a633; text-align: center; font-family: sans-serif; padding-top: 50px; }
+        .card { border: 2px solid #c2a633; padding: 20px; border-radius: 20px; display: inline-block; }
+        .bal { font-size: 35px; color: #fff; margin: 15px; }
+        .btn { background: #c2a633; color: #fff; padding: 15px 30px; border-radius: 12px; border: none; font-weight: bold; }
     </style>
 </head>
-<body class="ltr">
-    <div class="lang-pnl"><button class="btn-lang" onclick="toggleLang()" id="lang-btn">العربية</button></div>
-    <div id="ad-top-slot" class="ad-slot"></div>
-    <div class="container">
-        <div id="p-home" class="page-view animate__animated animate__fadeIn">
-            <div class="card">
-                <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" style="width:80px;" id="smc-trigger">
-                <div style="color:var(--gray); font-size: 0.9rem; margin-top:10px;" id="txt-total-bal">TOTAL BALANCE (DOGE)</div>
-                <div id="bal-display" class="bal-val">0.000000</div>
-                
-                <div class="cap-cont">
-                    <div class="h-captcha" data-sitekey="YOUR_SITE_KEY" data-callback="onCapSolved" data-theme="dark"></div>
-                </div>
-
-                <div id="claim-area"><button id="btn-claim" class="btn-main" disabled>CLAIM DOGE ⚡</button></div>
-                <div id="wait-area" class="hidden">
-                    <div id="timer-text" style="font-weight:bold; font-size:1.4rem; color:#fff;">00:00</div>
-                    <div class="progress-bar"><div id="p-bar"></div></div>
-                </div>
-            </div>
-        </div>
+<body>
+    <div class="card">
+        <h2>DOGECOIN MINER</h2>
+        <div class="bal" id="b">0.000000</div>
+        <button class="btn" onclick="setInterval(()=>{document.getElementById('b').innerText=(parseFloat(document.getElementById('b').innerText)+0.012500).toFixed(6)},1000)">Start Mining DOGE</button>
+    </div>
+</body>
+</html>
 
         <div id="p-wallet" class="page-view hidden animate__animated animate__fadeIn">
             <div class="card">
